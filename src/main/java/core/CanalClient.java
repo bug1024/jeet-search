@@ -1,23 +1,18 @@
 package core;
 
-import java.lang.reflect.Array;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.otter.canal.client.CanalConnector;
+import com.alibaba.otter.canal.client.CanalConnectors;
+import com.alibaba.otter.canal.common.utils.AddressUtils;
+import com.alibaba.otter.canal.protocol.CanalEntry.*;
+import com.alibaba.otter.canal.protocol.Message;
+
+import javax.swing.text.Style;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.alibaba.otter.canal.client.CanalConnector;
-import com.alibaba.otter.canal.client.CanalConnectors;
-import com.alibaba.otter.canal.common.utils.AddressUtils;
-import com.alibaba.otter.canal.protocol.Message;
-import com.alibaba.otter.canal.protocol.CanalEntry.Column;
-import com.alibaba.otter.canal.protocol.CanalEntry.Entry;
-import com.alibaba.otter.canal.protocol.CanalEntry.EntryType;
-import com.alibaba.otter.canal.protocol.CanalEntry.EventType;
-import com.alibaba.otter.canal.protocol.CanalEntry.RowChange;
-import com.alibaba.otter.canal.protocol.CanalEntry.RowData;
-import com.sun.xml.internal.messaging.saaj.util.FinalArrayList;
 
 /**
  * canal client
@@ -33,13 +28,14 @@ public class CanalClient {
                 11111), "example", "", "");
         int batchSize = 1000;
         int emptyCount = 0;
+
         try {
             connector.connect();
             connector.subscribe(".*\\..*");
             connector.rollback();
             int totalEmptyCount = 300;
 
-            System.out.println("=======Begin=========");
+            System.out.println("=======Begin=======");
 
             while (emptyCount < totalEmptyCount) {
                 // 获取指定数量的数据
@@ -56,7 +52,7 @@ public class CanalClient {
                     }
                 } else {
                     emptyCount = 0;
-                    printEntry(message.getEntries());
+                    processEntry(message.getEntries());
                 }
 
                 // 提交确认
@@ -64,12 +60,14 @@ public class CanalClient {
                 // 处理失败, 回滚数据
                 // connector.rollback(batchId);
             }
+
+            System.out.println("=======End=======");
         } finally {
             connector.disconnect();
         }
     }
 
-    private static void printEntry(List<Entry> entries) {
+    private static void processEntry(List<Entry> entries) {
         for (Entry entry : entries) {
             if (entry.getEntryType() == EntryType.TRANSACTIONBEGIN || entry.getEntryType() == EntryType.TRANSACTIONEND) {
                 continue;
@@ -89,10 +87,11 @@ public class CanalClient {
             baseInfo.put("binlogOffset", entry.getHeader().getLogfileOffset());
             baseInfo.put("dbName", entry.getHeader().getSchemaName());
             baseInfo.put("tableName", entry.getHeader().getTableName());
-            baseInfo.put("eventType", eventType);
+            baseInfo.put("eventType", eventType.toString().toLowerCase());
 
             for (RowData rowData : rowChange.getRowDatasList()) {
-                sendToMq(baseInfo, rowData.getBeforeColumnsList(), rowData.getAfterColumnsList());
+                String json = getRowDataJson(baseInfo, rowData.getBeforeColumnsList(), rowData.getAfterColumnsList());
+                sendToMq(json, baseInfo.get("tableName"));
             }
         }
     }
@@ -106,10 +105,9 @@ public class CanalClient {
         return columnMap;
     }
 
-
-    private static void sendToMq(Map<String, Object> baseInfo, List<Column> columnsBefore, List<Column> columnsAfter) {
+    private static String getRowDataJson(Map<String, Object> baseInfo, List<Column> columnsBefore, List<Column> columnsAfter) {
         List<Object> beforeArray = new ArrayList(columnsBefore.size());
-        List<Object> afterArray = new ArrayList(columnsAfter.size());
+        List<Object> afterArray  = new ArrayList(columnsAfter.size());
 
         for (Column column: columnsBefore) {
             beforeArray.add(columnToMap(column));
@@ -126,11 +124,16 @@ public class CanalClient {
         map.put("before", beforeArray);
         map.put("after", afterArray);
 
-        String routeKey = baseInfo.get("dbName") + "." + baseInfo.get("tableName");
-        String msg = map.toString();
+        return JSON.toJSONString(map);
+    }
 
-        // @TODO 发送到消息队列
-        System.out.println(routeKey + ":" + msg);
+    private static void sendToMq(Object msg, Object key) {
+        System.out.println(msg + " ==> " + key);
+        try {
+            RabbitMQClient.INSTANCE.publish(msg.toString());
+        } catch (Exception e) {
+            System.out.println("sent to mq failed");
+        }
     }
 
 }

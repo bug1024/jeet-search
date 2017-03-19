@@ -22,6 +22,12 @@
             <artifactId>amqp-client</artifactId>
             <version>4.1.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>RELEASE</version>
+        </dependency>
     </dependencies>
 
 </project>

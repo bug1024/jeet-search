@@ -26,35 +26,35 @@
 ```
  新建canal用户并分配权限
 ```sql
-    CREATE USER canal IDENTIFIED BY 'canal';  
+    CREATE USER canal IDENTIFIED BY 'canal';
     GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'canal'@'%';
     -- GRANT ALL PRIVILEGES ON *.* TO 'canal'@'%' ;
     FLUSH PRIVILEGES;
 ```
 
 ## canal配置
- 修改instance.properties，更多配置![戳此](https://github.com/alibaba/canal/wiki/AdminGuide)
+ 修改instance.properties，更多配置[戳此](https://github.com/alibaba/canal/wiki/AdminGuide)
 ```
     ## mysql serverId
     canal.instance.mysql.slaveId = 1234
-    
+
     # position info，需要改成自己的数据库信息
-    canal.instance.master.address = 127.0.0.1:3306 
-    canal.instance.master.journal.name = 
-    canal.instance.master.position = 
-    canal.instance.master.timestamp = 
-    
-    #canal.instance.standby.address = 
+    canal.instance.master.address = 127.0.0.1:3306
+    canal.instance.master.journal.name =
+    canal.instance.master.position =
+    canal.instance.master.timestamp =
+
+    #canal.instance.standby.address =
     #canal.instance.standby.journal.name =
-    #canal.instance.standby.position = 
-    #canal.instance.standby.timestamp = 
-    
+    #canal.instance.standby.position =
+    #canal.instance.standby.timestamp =
+
     # username/password，需要改成自己的数据库信息
-    canal.instance.dbUsername = canal  
+    canal.instance.dbUsername = canal
     canal.instance.dbPassword = canal
     canal.instance.defaultDatabaseName =
     canal.instance.connectionCharset = UTF-8
-    
+
     # table regex
     canal.instance.filter.regex = .*\\..*
 ```

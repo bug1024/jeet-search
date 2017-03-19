@@ -22,7 +22,7 @@ import com.alibaba.otter.canal.protocol.CanalEntry.RowData;
  */
 public class SimpleCanalClient {
     public static void main(String args[]) {
-        // 创建链接
+        // 根据ip，直接创建链接，无HA的功能
         CanalConnector connector = CanalConnectors.newSingleConnector(new InetSocketAddress(AddressUtils.getHostIp(),
                 11111), "example", "", "");
         int batchSize = 1000;

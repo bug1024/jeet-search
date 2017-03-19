@@ -33,7 +33,7 @@
 ```
 
 ## canal配置
- 修改instance.properties
+ 修改instance.properties，更多配置![戳此](https://github.com/alibaba/canal/wiki/AdminGuide)
 ```
     ## mysql serverId
     canal.instance.mysql.slaveId = 1234

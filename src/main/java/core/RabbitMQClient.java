@@ -1,12 +1,6 @@
 package core;
 
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.QueueingConsumer;
-
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
+import com.rabbitmq.client.*;
 
 /**
  * RabbitMQ客户端，用于初始化连接
@@ -30,7 +24,10 @@ public enum RabbitMQClient {
         return channel;
     }
 
-    private RabbitMQClient() {
+    RabbitMQClient() {
+        //ResourceBundle conf = ResourceBundle.getBundle("src/main/resources/rabbitmq/rabbitmq");
+        //System.out.println(conf.getString("host"));
+
         // @TODO 使用配置文件
         String userName = "guest";
         String password = "guest";
@@ -69,10 +66,6 @@ public enum RabbitMQClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void consume() {
-
     }
 
 }

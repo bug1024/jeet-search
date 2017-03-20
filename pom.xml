@@ -23,6 +23,14 @@
             <version>4.1.0</version>
         </dependency>
 
+        <!--ES客户端-->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>rest</artifactId>
+            <version>5.2.2</version>
+        </dependency>
+
+        <!--单元测试-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

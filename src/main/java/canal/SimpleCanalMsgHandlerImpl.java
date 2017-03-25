@@ -1,9 +1,9 @@
 package canal;
 
 import com.alibaba.fastjson.JSON;
-import org.springframework.stereotype.Component;
 
 /**
+ * canal消息处理，只是简单的输出
  * @author bug1024
  * @date 2017-03-25
  */

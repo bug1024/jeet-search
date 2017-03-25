@@ -3,8 +3,6 @@ package canal;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.protocol.CanalEntry;
 import com.alibaba.otter.canal.protocol.Message;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,15 +10,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * canal客户端服务
+ *
  * @author bug1024
  * @date 2017-03-25
  */
-@Service
 public class CanalService {
 
     private CanalMsgHandler canalMsgHandler;
 
     private CanalPool canalPool;
+
+    public CanalService(CanalPool canalPool, CanalMsgHandler canalMsgHandler) {
+        this.canalPool  = canalPool;
+        this.canalMsgHandler = canalMsgHandler;
+    }
 
     public void start() {
         int batchSize = 1000;
@@ -128,14 +132,6 @@ public class CanalService {
         canalMsg.setMsg(map);
 
         return canalMsg;
-    }
-
-    public void setCanalMsgHandler(CanalMsgHandler canalMsgHandler) {
-        this.canalMsgHandler = canalMsgHandler;
-    }
-
-    public void setCanalPool(CanalPool canalPool) {
-        this.canalPool = canalPool;
     }
 
 }

@@ -15,15 +15,17 @@ import java.util.Map;
  * @author bug1024
  * @date 2017-03-25
  */
+@Service
 public class CanalService {
 
     private CanalMsgHandler canalMsgHandler;
+
+    private CanalPool canalPool;
 
     public void start() {
         int batchSize = 1000;
         int emptyCount = 0;
 
-        CanalPool canalPool = new CanalPool();
         CanalConnector canalConnector = canalPool.getConnector();
 
         try {
@@ -130,6 +132,10 @@ public class CanalService {
 
     public void setCanalMsgHandler(CanalMsgHandler canalMsgHandler) {
         this.canalMsgHandler = canalMsgHandler;
+    }
+
+    public void setCanalPool(CanalPool canalPool) {
+        this.canalPool = canalPool;
     }
 
 }

@@ -61,9 +61,9 @@
 
 ## Changelog
  - 2017.3.18
-  * 启动项目
-  * 搭建canal，rabbitmq，es环境
+    * 启动项目
+    * 搭建canal，rabbitmq，es环境
  - 2017.3.19
-  * 实现canal和rabbitmq部分逻辑
+    * 实现canal和rabbitmq部分逻辑
  - 2017.3.25
-  * 引入Spring框架重构代码
+    * 引入Spring框架重构代码

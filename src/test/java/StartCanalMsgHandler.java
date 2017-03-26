@@ -1,7 +1,9 @@
+import canal.CanalMsgMQHandlerImpl;
 import canal.CanalPool;
 import canal.CanalService;
-import canal.SimpleCanalMsgHandlerImpl;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import rabbitmq.MessageSender;
 
 /**
  * 启动canal消息处理程序
@@ -9,13 +11,19 @@ import org.springframework.test.context.ContextConfiguration;
  * @author bug1024
  * @date 2017-03-25
  */
-@ContextConfiguration("classpath:/spring/applicationContext.xml")
 public class StartCanalMsgHandler {
 
     public static void main(String[] args) {
-        SimpleCanalMsgHandlerImpl simpleCanalMsgHandler = new SimpleCanalMsgHandlerImpl();
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:/spring/applicationContext.xml");
+
         CanalPool canalPool = new CanalPool();
-        CanalService canalService = new CanalService(canalPool, simpleCanalMsgHandler);
+
+        AmqpTemplate amqpTemplate = (AmqpTemplate) context.getBean("amqpTemplate");
+        MessageSender messageSender = new MessageSender(amqpTemplate);
+        CanalMsgMQHandlerImpl canalMsgHandler = new CanalMsgMQHandlerImpl(messageSender);
+
+        CanalService canalService = new CanalService(canalPool, canalMsgHandler);
+
         canalService.start();
     }
 

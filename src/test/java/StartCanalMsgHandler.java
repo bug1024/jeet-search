@@ -1,8 +1,11 @@
 import canal.CanalMsgMQHandlerImpl;
 import canal.CanalPool;
 import canal.CanalService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import rabbitmq.MessageReceiver;
 import rabbitmq.MessageSender;
 
 /**
@@ -12,6 +15,8 @@ import rabbitmq.MessageSender;
  * @date 2017-03-25
  */
 public class StartCanalMsgHandler {
+
+    private static Logger logger = LoggerFactory.getLogger(MessageReceiver.class);
 
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:/spring/applicationContext.xml");

@@ -1,6 +1,9 @@
 package canal;
 
 import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rabbitmq.MessageReceiver;
 import rabbitmq.MessageSender;
 
 /**
@@ -11,6 +14,8 @@ import rabbitmq.MessageSender;
  */
 public class CanalMsgMQHandlerImpl implements CanalMsgHandler {
 
+    private static Logger logger = LoggerFactory.getLogger(MessageReceiver.class);
+
     private MessageSender messageSender;
 
     public CanalMsgMQHandlerImpl(MessageSender messageSender) {
@@ -18,10 +23,9 @@ public class CanalMsgMQHandlerImpl implements CanalMsgHandler {
     }
 
     public Boolean handle(CanalMsg canalMsg) {
-        System.out.println(JSON.toJSONString(canalMsg.getMsg()));
-        //messageSender.sendMessage(canalMsg.getKey(), canalMsg.getMsg());
-        messageSender.sendMessage("canal", canalMsg.getMsg());
-        return null;
+        logger.info("##send to mq##" + JSON.toJSONString(canalMsg.getMsg()));
+
+        return  messageSender.sendMessage(canalMsg.getKey(), canalMsg.getMsg());
     }
 
 }

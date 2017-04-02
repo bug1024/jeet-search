@@ -127,11 +127,9 @@ public class CanalService {
         map.put("before", beforeArray);
         map.put("after", afterArray);
 
-        CanalMsg canalMsg = new CanalMsg();
-        canalMsg.setKey(baseInfo.get("tableName").toString());
-        canalMsg.setMsg(map);
+        String key = baseInfo.get("dbName").toString() + "." + baseInfo.get("tableName").toString();
 
-        return canalMsg;
+        return  new CanalMsg(key, map);
     }
 
 }

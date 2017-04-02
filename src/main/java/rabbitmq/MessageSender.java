@@ -16,8 +16,14 @@ public class MessageSender {
         this.amqpTemplate = amqpTemplate;
     }
 
-    public void sendMessage(String routingKey, Object message){
-        amqpTemplate.convertAndSend(routingKey, message);
+    public Boolean sendMessage(String routingKey, Object message){
+        try {
+            amqpTemplate.convertAndSend(routingKey, message);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

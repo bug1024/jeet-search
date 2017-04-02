@@ -1,6 +1,8 @@
 package rabbitmq;
 
 import com.rabbitmq.client.Channel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.stereotype.Service;
@@ -14,8 +16,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class MessageReceiver implements ChannelAwareMessageListener {
 
+    private static Logger logger = LoggerFactory.getLogger(MessageReceiver.class);
+
     public void onMessage(Message message, Channel channel) throws Exception {
-        System.out.println(message);
+        logger.info("##receiver1##" + message);
 
         // false只确认当前一个消息收到，true确认所有consumer获得的消息
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);

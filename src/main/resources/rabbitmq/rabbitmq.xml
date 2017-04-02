@@ -23,18 +23,18 @@
     <rabbit:queue id="q-canal" name="q-canal" durable="true" auto-delete="false" exclusive="false"/>
 
     <!-- 声明交换器与队列的绑定 -->
-    <rabbit:direct-exchange name="x-canal" durable="true" auto-delete="false">
+    <rabbit:topic-exchange name="x-canal-topic" durable="true" auto-delete="false">
        <rabbit:bindings>
-           <rabbit:binding queue="q-canal" key="canal"></rabbit:binding>
+           <rabbit:binding queue="q-canal" pattern="canal.*" />
        </rabbit:bindings>
-    </rabbit:direct-exchange>
+    </rabbit:topic-exchange>
 
     <!-- 定义rabbit template用于数据的接收和发送 -->
-    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" exchange="x-canal"/>
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" exchange="x-canal-topic"/>
 
     <!-- 配置异步MessageListener接口，consumer的业务逻辑会在onMessage中实现 -->
     <rabbit:listener-container connection-factory="connectionFactory" acknowledge="manual">
-        <rabbit:listener queues="q-canal" ref="messageReceiver"/>
+        <rabbit:listener queues="q-canal" ref="messageReceiver" />
     </rabbit:listener-container>
 
 </beans>

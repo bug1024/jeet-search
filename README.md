@@ -59,6 +59,9 @@
     canal.instance.filter.regex = .*\\..*
 ```
 
+## 踩坑
+ - RabbitMQ topic exchange 路由键a.*无法匹配a.b.c，只有a.*.*才能匹配a.b.c
+
 ## RoadMap
  - 2017.3.18
     * 启动项目

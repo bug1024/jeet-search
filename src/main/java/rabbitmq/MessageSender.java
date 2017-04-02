@@ -1,5 +1,8 @@
 package rabbitmq;
 
+import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 
 /**
@@ -10,6 +13,8 @@ import org.springframework.amqp.core.AmqpTemplate;
  */
 public class MessageSender {
 
+    private static Logger logger = LoggerFactory.getLogger(MessageSender.class);
+
     private AmqpTemplate amqpTemplate;
 
     public MessageSender(AmqpTemplate amqpTemplate) {
@@ -18,7 +23,9 @@ public class MessageSender {
 
     public Boolean sendMessage(String routingKey, Object message){
         try {
-            amqpTemplate.convertAndSend(routingKey, message);
+            String msg = JSON.toJSONString(message, true);
+            logger.info(routingKey, msg);
+            amqpTemplate.convertAndSend(routingKey, msg);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

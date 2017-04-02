@@ -14,7 +14,7 @@ import rabbitmq.MessageSender;
  */
 public class CanalMsgMQHandlerImpl implements CanalMsgHandler {
 
-    private static Logger logger = LoggerFactory.getLogger(MessageReceiver.class);
+    private static Logger logger = LoggerFactory.getLogger(CanalMsgMQHandlerImpl.class);
 
     private MessageSender messageSender;
 
@@ -23,9 +23,7 @@ public class CanalMsgMQHandlerImpl implements CanalMsgHandler {
     }
 
     public Boolean handle(CanalMsg canalMsg) {
-        logger.info("##send to mq##" + JSON.toJSONString(canalMsg.getMsg()));
-
-        return  messageSender.sendMessage(canalMsg.getKey(), canalMsg.getMsg());
+        return messageSender.sendMessage(canalMsg.getKey(), canalMsg.getMsg());
     }
 
 }

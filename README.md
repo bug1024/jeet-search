@@ -4,7 +4,7 @@
 ## 环境
  - 系统环境：MacOS 10.12
  - 数据库：MySQL 5.7.16
- - ES版本：stable 5.3.0
+ - ES版本：stable 2.4.4
  - binlog订阅消费组件：canal 4.2.12
  - 消息队列：RabbitMQ 3.6.6
 
@@ -59,8 +59,15 @@
     canal.instance.filter.regex = .*\\..*
 ```
 
+## elasticsearch配置
+修改elasticsearch.yml
+```yml
+    cluster.name: jeet-search
+```
+
 ## 踩坑
  - RabbitMQ topic exchange 路由键a.*无法匹配a.b.c，只有a.*.*才能匹配a.b.c
+ - spring-data-elasticsearch 暂时不支持ES5，所以最后选择了2.4.4版本
 
 ## RoadMap
  - 2017.3.18
@@ -70,3 +77,6 @@
     * 实现canal和rabbitmq部分逻辑
  - 2017.3.25
     * 引入Spring框架重构代码
+ - 2017.4.2
+    * ES5.x 很多配套的组件不支持，改用2.4.4
+    * 实现索引构建

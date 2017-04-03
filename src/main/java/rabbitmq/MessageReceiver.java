@@ -28,21 +28,17 @@ public class MessageReceiver implements ChannelAwareMessageListener {
 
     private static Logger logger = LoggerFactory.getLogger(MessageReceiver.class);
 
-    //@Resource
-    //private UserRepository repository;
+    @Resource
+    private UserRepository repository;
 
     public void onMessage(Message message, Channel channel) throws Exception {
         try {
             String jsonString = new String(message.getBody());
 
-            //User user = convertJsonToUser(jsonString);
-            User user = new User();
-            user.setId(1);
-            user.setUsername("123");
+            User user = convertJsonToUser(jsonString);
 
-            // @TODO build elasticsearch index
-            //repository.save(user);
-
+            logger.info("##build index##" + user.toString());
+            repository.save(user);
 
             // false只确认当前一个消息收到，true确认所有consumer获得的消息
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
@@ -56,7 +52,6 @@ public class MessageReceiver implements ChannelAwareMessageListener {
     }
 
     private User convertJsonToUser(String jsonString) {
-        logger.info(jsonString);
         JSONArray jsonArray = JSON.parseObject(jsonString).getJSONArray("after");
 
         User user = new User();
@@ -68,6 +63,7 @@ public class MessageReceiver implements ChannelAwareMessageListener {
             value = ((JSONObject) obj).get("value").toString();
             map.put(name, value);
         }
+
         BeanUtil.transMap2Bean(map, user);
 
         return user;

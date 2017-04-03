@@ -7,6 +7,7 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
 import java.util.Map;
 
 /**
@@ -27,15 +28,34 @@ public class BeanUtil {
 
                 if (map.containsKey(key)) {
                     Object value = map.get(key);
+                    String type = property.getPropertyType().getName();
                     // 得到property对应的setter方法
                     Method setter = property.getWriteMethod();
-                    setter.invoke(obj, value);
+                    setter.invoke(obj, getValue(type, value));
                 }
-
             }
-
         } catch (Exception e) {
             logger.warn("transMap2Bean Error" + e.getMessage());
         }
     }
+
+    public static Object getValue(String type, Object obj) {
+        if ("java.lang.String".equals(type)) {
+            obj = String.valueOf("" + obj);
+        } else if ("java.lang.Integer".equals(type)) {
+            obj = Integer.valueOf("" + obj);
+        } else if ("java.lang.Long".equals(type)) {
+            obj = Long.valueOf("" + obj);
+        } else if ("java.lang.Float".equals(type)) {
+            obj = Float.valueOf("" + obj);
+        } else if ("java.sql.Timestamp".equals(type)) {
+            obj = Timestamp.valueOf("" + obj);
+        } else {
+            obj = obj.toString();
+        }
+
+        return obj;
+    }
+
+
 }

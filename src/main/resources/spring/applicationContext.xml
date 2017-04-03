@@ -12,4 +12,5 @@
 
     <!--import rabbitmq configuration-->
     <import resource="classpath:/rabbitmq/rabbitmq.xml"/>
+    <import resource="classpath:/elasticsearch/elasticsearch.xml"/>
 </beans>

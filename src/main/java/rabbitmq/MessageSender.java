@@ -23,12 +23,11 @@ public class MessageSender {
 
     public Boolean sendMessage(String routingKey, Object message){
         try {
-            String msg = JSON.toJSONString(message, true);
-            logger.info(routingKey, msg);
+            String msg = JSON.toJSONString(message);
             amqpTemplate.convertAndSend(routingKey, msg);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("send to mq failed");
             return false;
         }
     }

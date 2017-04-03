@@ -67,7 +67,12 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-elasticsearch</artifactId>
-            <version>2.0.4.RELEASE</version>
+            <version>3.0.0.BUILD-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>5.3.0</version>
         </dependency>
 
         <!--Spring RabbitMQ-->
@@ -98,5 +103,13 @@
             <version>1.16.12</version>
         </dependency>
     </dependencies>
+
+   <repositories>
+       <repository>
+           <id>spring-libs-snapshot</id>
+           <name>Spring Snapshot Repository</name>
+           <url>http://repo.spring.io/libs-snapshot</url>
+       </repository>
+   </repositories>
 
 </project>

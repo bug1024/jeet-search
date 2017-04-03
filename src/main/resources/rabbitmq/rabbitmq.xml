@@ -30,7 +30,7 @@
     </rabbit:topic-exchange>
 
     <!-- 定义rabbit template用于数据的接收和发送 -->
-    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" exchange="x-canal-topic" queue="q-canal"/>
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" exchange="x-canal-topic" />
 
     <!-- 配置异步MessageListener接口，consumer的业务逻辑会在onMessage中实现 -->
     <rabbit:listener-container connection-factory="connectionFactory" acknowledge="manual">

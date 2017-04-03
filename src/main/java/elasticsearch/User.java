@@ -3,6 +3,7 @@ package elasticsearch;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -22,14 +23,14 @@ public class User implements Serializable {
     @Id
     private Integer id;
 
-    private Integer username;
+    private String username;
 
-    private String realName;
+    private String real_name;
 
-    private Integer status;
+    private String status;
 
-    private Timestamp createTime;
+    private String create_time;
 
-    private Timestamp updateTime;
+    private String update_time;
 
 }

@@ -4,7 +4,7 @@
 ## 环境
  - 系统环境：MacOS 10.12
  - 数据库：MySQL 5.7.16
- - ES版本：stable 5.2.2
+ - ES版本：stable 5.3.0
  - binlog订阅消费组件：canal 4.2.12
  - 消息队列：RabbitMQ 3.6.6
 

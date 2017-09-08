@@ -71,6 +71,15 @@ public class CanalService {
     }
 
     private void processEntry(List<CanalEntry.Entry> entries) {
+        List<CanalMsg> msgList = convertToCanalMsgList(entries);
+        for (CanalMsg msg : msgList) {
+            canalMsgHandler.handle(msg);
+        }
+    }
+
+    private List<CanalMsg> convertToCanalMsgList(List<CanalEntry.Entry> entries) {
+        List<CanalMsg> msgList = new ArrayList<CanalMsg>();
+        CanalMsgContent canalMsgContent = null;
         for (CanalEntry.Entry entry : entries) {
             if (entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONBEGIN || entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONEND) {
                 continue;
@@ -84,52 +93,35 @@ public class CanalService {
             }
 
             CanalEntry.EventType eventType = rowChange.getEventType();
-
-            Map<String, Object> baseInfo = new HashMap<String, Object>(5);
-            baseInfo.put("binlogFile", entry.getHeader().getLogfileName());
-            baseInfo.put("binlogOffset", entry.getHeader().getLogfileOffset());
-            baseInfo.put("dbName", entry.getHeader().getSchemaName());
-            baseInfo.put("tableName", entry.getHeader().getTableName());
-            baseInfo.put("eventType", eventType.toString().toLowerCase());
+            canalMsgContent = new CanalMsgContent();
+            canalMsgContent.setBinLogFile(entry.getHeader().getLogfileName());
+            canalMsgContent.setBinlogOffset(entry.getHeader().getLogfileOffset());
+            canalMsgContent.setDbName(entry.getHeader().getSchemaName());
+            canalMsgContent.setTableName(entry.getHeader().getTableName());
+            canalMsgContent.setEventType(eventType.toString().toLowerCase());
 
             for (CanalEntry.RowData rowData : rowChange.getRowDatasList()) {
-                CanalMsg canalMsg = getCanalMsg(baseInfo, rowData.getBeforeColumnsList(), rowData.getAfterColumnsList());
-                canalMsgHandler.handle(canalMsg);
+                canalMsgContent.setDataBefore(convertToCanalChangeInfoList(rowData.getBeforeColumnsList()));
+                canalMsgContent.setDataAfter(convertToCanalChangeInfoList(rowData.getAfterColumnsList()));
+                CanalMsg canalMsg = new CanalMsg(canalMsgContent);
+                msgList.add(canalMsg);
             }
         }
+
+        return msgList;
     }
 
-    private Map columnConvertToMap(CanalEntry.Column column) {
-        Map<String, Object> map = new HashMap<String, Object>(3);
-        map.put("name", column.getName());
-        map.put("value", column.getValue());
-        map.put("update", column.getUpdated());
-
-        return map;
-    }
-
-    private CanalMsg getCanalMsg(Map<String, Object> baseInfo, List<CanalEntry.Column> columnsBefore, List<CanalEntry.Column> columnsAfter) {
-        List<Object> beforeArray = new ArrayList(columnsBefore.size());
-        List<Object> afterArray  = new ArrayList(columnsAfter.size());
-
-        for (CanalEntry.Column column: columnsBefore) {
-            beforeArray.add(columnConvertToMap(column));
+    private List<CanalChangeInfo> convertToCanalChangeInfoList(List<CanalEntry.Column> columnList) {
+        List<CanalChangeInfo> canalChangeInfoList = new ArrayList<CanalChangeInfo>();
+        for (CanalEntry.Column column : columnList) {
+            CanalChangeInfo canalChangeInfo = new CanalChangeInfo();
+            canalChangeInfo.setName(column.getName());
+            canalChangeInfo.setValue(column.getValue());
+            canalChangeInfo.setUpdate(column.getUpdated());
+            canalChangeInfoList.add(canalChangeInfo);
         }
 
-        for (CanalEntry.Column column: columnsAfter) {
-            afterArray.add(columnConvertToMap(column));
-        }
-
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("dbName", baseInfo.get("dbName"));
-        map.put("tableName", baseInfo.get("tableName"));
-        map.put("eventType", baseInfo.get("eventType"));
-        map.put("before", beforeArray);
-        map.put("after", afterArray);
-
-        String key = baseInfo.get("dbName").toString() + "." + baseInfo.get("tableName").toString();
-
-        return  new CanalMsg(key, map);
+        return canalChangeInfoList;
     }
 
 }

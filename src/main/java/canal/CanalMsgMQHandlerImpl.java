@@ -21,7 +21,7 @@ public class CanalMsgMQHandlerImpl implements CanalMsgHandler {
     }
 
     public Boolean handle(CanalMsg canalMsg) {
-        return messageSender.sendMessage(canalMsg.getKey(), canalMsg.getMsg());
+        return messageSender.sendMessage(canalMsg.getKey(), canalMsg.getCanalMsgContent());
     }
 
 }

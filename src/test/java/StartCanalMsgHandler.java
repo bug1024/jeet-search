@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import rabbitmq.MessageReceiver;
 import rabbitmq.MessageSender;
 
 /**
@@ -16,7 +15,7 @@ import rabbitmq.MessageSender;
  */
 public class StartCanalMsgHandler {
 
-    private static Logger logger = LoggerFactory.getLogger(MessageReceiver.class);
+    private static Logger logger = LoggerFactory.getLogger(StartCanalMsgHandler.class);
 
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:/spring/applicationContext.xml");

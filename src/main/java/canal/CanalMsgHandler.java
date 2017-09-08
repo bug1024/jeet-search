@@ -1,7 +1,5 @@
 package canal;
 
-import com.alibaba.fastjson.JSON;
-
 /**
  * canal消息处理
  *

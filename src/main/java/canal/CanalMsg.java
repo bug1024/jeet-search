@@ -13,13 +13,16 @@ import java.util.Map;
 @Data
 public class CanalMsg {
 
-    private Map msg;
-
     private String key;
 
-    CanalMsg(String key, Map msg) {
-        this.key = "canal." + key;
-        this.msg = msg;
+    private CanalMsgContent canalMsgContent;
+
+    CanalMsg(CanalMsgContent canalMsgContent) {
+        this.key = "canal." + canalMsgContent.getDbName() + "." + canalMsgContent.getTableName();
+        this.canalMsgContent = canalMsgContent;
+    }
+
+    CanalMsg() {
     }
 
 }

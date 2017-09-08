@@ -1,8 +1,11 @@
 package rabbitmq;
 
+import canal.CanalChangeInfo;
+import canal.CanalMsgContent;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import elasticsearch.User;
 import elasticsearch.UserRepository;
@@ -15,6 +18,7 @@ import utils.BeanUtil;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +31,8 @@ import java.util.Map;
 public class MessageReceiver implements ChannelAwareMessageListener {
 
     private static Logger logger = LoggerFactory.getLogger(MessageReceiver.class);
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Resource
     private UserRepository repository;
@@ -51,19 +57,22 @@ public class MessageReceiver implements ChannelAwareMessageListener {
         //channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
     }
 
-    private User convertJsonToUser(String jsonString) {
-        JSONArray jsonArray = JSON.parseObject(jsonString).getJSONArray("after");
-
-        User user = new User();
-        Map map = new HashMap();
-        String name;
-        String value;
-        for (Object obj: jsonArray) {
-            name = ((JSONObject) obj).get("name").toString();
-            value = ((JSONObject) obj).get("value").toString();
-            map.put(name, value);
+    private User convertJsonToUser(String jsonString) throws Exception {
+        CanalMsgContent content = null;
+        try {
+            content = objectMapper.readValue(jsonString, CanalMsgContent.class);
+        } catch (Exception e) {
+            logger.warn("json decode failed", e);
+            throw e;
         }
 
+        List<CanalChangeInfo> afterList = content.getDataAfter();
+        Map map = new HashMap();
+        for (CanalChangeInfo changeInfo : afterList) {
+            map.put(changeInfo.getName(), changeInfo.getValue());
+        }
+
+        User user = new User();
         BeanUtil.transMap2Bean(map, user);
 
         return user;

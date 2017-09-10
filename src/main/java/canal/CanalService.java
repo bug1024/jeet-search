@@ -3,6 +3,7 @@ package canal;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.protocol.CanalEntry;
 import com.alibaba.otter.canal.protocol.Message;
+import consts.CommonConstant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,11 +37,10 @@ public class CanalService {
             canalConnector.connect();
             canalConnector.subscribe(".*\\..*");
             canalConnector.rollback();
-            int totalEmptyCount = 300;
 
             System.out.println("=======Begin=======");
 
-            while (emptyCount < totalEmptyCount) {
+            while (emptyCount < CommonConstant.CANAL_TOTAL_EMPTY_COUNT) {
                 // 获取指定数量的数据
                 Message message = canalConnector.getWithoutAck(batchSize);
                 long batchId = message.getId();

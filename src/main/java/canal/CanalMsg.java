@@ -1,5 +1,6 @@
 package canal;
 
+import consts.CommonConstant;
 import lombok.Data;
 
 import java.util.Map;
@@ -18,7 +19,7 @@ public class CanalMsg {
     private CanalMsgContent canalMsgContent;
 
     CanalMsg(CanalMsgContent canalMsgContent) {
-        this.key = "canal." + canalMsgContent.getDbName() + "." + canalMsgContent.getTableName();
+        this.key = CommonConstant.CANAL_MSG_KEY_PREFIX + CommonConstant.KEY_SEPARATOR + canalMsgContent.getDbName() + CommonConstant.KEY_SEPARATOR + canalMsgContent.getTableName();
         this.canalMsgContent = canalMsgContent;
     }
 

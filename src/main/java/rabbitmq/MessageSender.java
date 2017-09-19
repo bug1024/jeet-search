@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * 发送消息
@@ -13,17 +15,15 @@ import org.springframework.amqp.core.AmqpTemplate;
  * @author bug1024
  * @date 2017-03-26
  */
+@Service
 public class MessageSender {
 
     private static Logger logger = LoggerFactory.getLogger(MessageSender.class);
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Autowired
     private AmqpTemplate amqpTemplate;
-
-    public MessageSender(AmqpTemplate amqpTemplate) {
-        this.amqpTemplate = amqpTemplate;
-    }
 
     public Boolean sendMessage(String routingKey, Object message){
         try {

@@ -4,6 +4,7 @@ import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.client.CanalConnectors;
 import com.alibaba.otter.canal.common.utils.AddressUtils;
 import consts.CommonConstant;
+import org.springframework.stereotype.Service;
 
 import java.net.InetSocketAddress;
 
@@ -11,6 +12,7 @@ import java.net.InetSocketAddress;
  * @author bug1024
  * @date 2017-03-25
  */
+@Service
 public class CanalPool {
 
     public CanalConnector getConnector() {

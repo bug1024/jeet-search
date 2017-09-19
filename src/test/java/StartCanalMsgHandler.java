@@ -18,17 +18,13 @@ public class StartCanalMsgHandler {
     private static Logger logger = LoggerFactory.getLogger(StartCanalMsgHandler.class);
 
     public static void main(String[] args) {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:/spring/applicationContext.xml");
-
-        CanalPool canalPool = new CanalPool();
-
-        AmqpTemplate amqpTemplate = (AmqpTemplate) context.getBean("amqpTemplate");
-        MessageSender messageSender = new MessageSender(amqpTemplate);
-        CanalMsgMQHandlerImpl canalMsgHandler = new CanalMsgMQHandlerImpl(messageSender);
-
-        CanalService canalService = new CanalService(canalPool, canalMsgHandler);
-
-        canalService.start();
+        try {
+            ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:/spring/applicationContext.xml");
+            CanalService canalService = (CanalService) context.getBean("canalService");
+            canalService.start();
+        } catch (Exception e) {
+            logger.warn("canal service error", e);
+        }
     }
 
 }

@@ -14,4 +14,6 @@ public class CommonConstant {
 
     public final static int CANAL_PORT = 11111;
     public final static String CANAL_DEST = "example";
+
+    public final static int BATCH_SIZE = 1000;
 }

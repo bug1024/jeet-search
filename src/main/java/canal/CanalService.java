@@ -4,13 +4,13 @@ import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.protocol.CanalEntry;
 import com.alibaba.otter.canal.protocol.Message;
 import consts.CommonConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * canal客户端服务
@@ -21,6 +21,8 @@ import java.util.Map;
 @Service
 public class CanalService {
 
+    private static Logger logger = LoggerFactory.getLogger(CanalService.class);
+
     @Autowired
     private CanalMsgHandler canalMsgHandler;
 
@@ -28,21 +30,16 @@ public class CanalService {
     private CanalPool canalPool;
 
     public void start() {
-        int batchSize = 1000;
         int emptyCount = 0;
-
         CanalConnector canalConnector = canalPool.getConnector();
-
         try {
             canalConnector.connect();
             canalConnector.subscribe(".*\\..*");
             canalConnector.rollback();
 
-            System.out.println("=======Begin=======");
-
             while (emptyCount < CommonConstant.CANAL_TOTAL_EMPTY_COUNT) {
                 // 获取指定数量的数据
-                Message message = canalConnector.getWithoutAck(batchSize);
+                Message message = canalConnector.getWithoutAck(CommonConstant.BATCH_SIZE);
                 long batchId = message.getId();
                 int size = message.getEntries().size();
                 if (batchId == -1 || size == 0) {
@@ -63,8 +60,8 @@ public class CanalService {
                 // 处理失败, 回滚数据
                 // connector.rollback(batchId);
             }
-
-            System.out.println("=======End=======");
+        } catch (Exception e) {
+            logger.warn("canal process error", e);
         } finally {
             canalConnector.disconnect();
         }

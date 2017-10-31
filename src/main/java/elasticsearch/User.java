@@ -1,5 +1,6 @@
 package elasticsearch;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -24,12 +25,15 @@ public class User implements Serializable {
 
     private Integer username;
 
-    private String real_name;
+    @JsonProperty("real_name")
+    private String realName;
 
     private Integer status;
 
-    private Timestamp create_time;
+    @JsonProperty("create_time")
+    private Timestamp createTime;
 
-    private Timestamp update_time;
+    @JsonProperty("update_time")
+    private Timestamp updateTime;
 
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import utils.BeanUtil;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,11 @@ public class MessageReceiver implements ChannelAwareMessageListener {
         }
 
         User user = new User();
-        BeanUtil.transMap2Bean(map, user);
+        user.setId(Integer.valueOf(map.get("id").toString()));
+        user.setStatus(Integer.valueOf(map.get("status").toString()));
+        user.setRealName(map.get("real_name").toString());
+        user.setCreateTime((Timestamp.valueOf(map.get("create_time").toString())));
+        user.setUpdateTime(Timestamp.valueOf(map.get("update_time").toString()));
 
         return user;
     }

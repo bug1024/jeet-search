@@ -1,6 +1,5 @@
 package rabbitmq;
 
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -20,14 +19,14 @@ public class MessageSender {
 
     private static Logger logger = LoggerFactory.getLogger(MessageSender.class);
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Autowired
     private AmqpTemplate amqpTemplate;
 
     public Boolean sendMessage(String routingKey, Object message){
         try {
-            String msg = objectMapper.writeValueAsString(message);
+            String msg = MAPPER.writeValueAsString(message);
             amqpTemplate.convertAndSend(routingKey, msg);
             return true;
         } catch (JsonProcessingException e) {

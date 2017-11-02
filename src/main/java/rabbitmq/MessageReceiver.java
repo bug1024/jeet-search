@@ -2,9 +2,6 @@ package rabbitmq;
 
 import canal.CanalChangeInfo;
 import canal.CanalMsgContent;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import elasticsearch.User;
@@ -14,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.stereotype.Service;
-import utils.BeanUtil;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
@@ -33,18 +29,18 @@ public class MessageReceiver implements ChannelAwareMessageListener {
 
     private static Logger logger = LoggerFactory.getLogger(MessageReceiver.class);
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Resource
     private UserRepository repository;
 
+    @Override
     public void onMessage(Message message, Channel channel) throws Exception {
         try {
             String jsonString = new String(message.getBody());
 
             User user = convertJsonToUser(jsonString);
 
-            logger.info("##build index##" + user.toString());
             repository.save(user);
 
             // false只确认当前一个消息收到，true确认所有consumer获得的消息
@@ -61,24 +57,24 @@ public class MessageReceiver implements ChannelAwareMessageListener {
     private User convertJsonToUser(String jsonString) throws Exception {
         CanalMsgContent content = null;
         try {
-            content = objectMapper.readValue(jsonString, CanalMsgContent.class);
+            content = MAPPER.readValue(jsonString, CanalMsgContent.class);
         } catch (Exception e) {
             logger.warn("json decode failed", e);
             throw e;
         }
 
         List<CanalChangeInfo> afterList = content.getDataAfter();
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         for (CanalChangeInfo changeInfo : afterList) {
             map.put(changeInfo.getName(), changeInfo.getValue());
         }
 
         User user = new User();
-        user.setId(Integer.valueOf(map.get("id").toString()));
-        user.setStatus(Integer.valueOf(map.get("status").toString()));
-        user.setRealName(map.get("real_name").toString());
-        user.setCreateTime((Timestamp.valueOf(map.get("create_time").toString())));
-        user.setUpdateTime(Timestamp.valueOf(map.get("update_time").toString()));
+        user.setId(Integer.valueOf(map.get("id")));
+        user.setStatus(Integer.valueOf(map.get("status")));
+        user.setRealName(map.get("real_name"));
+        user.setCreateTime((Timestamp.valueOf(map.get("create_time"))));
+        user.setUpdateTime(Timestamp.valueOf(map.get("update_time")));
 
         return user;
     }

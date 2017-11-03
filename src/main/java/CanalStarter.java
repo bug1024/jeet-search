@@ -1,21 +1,15 @@
-import canal.CanalMsgMQHandlerImpl;
-import canal.CanalPool;
 import canal.CanalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import rabbitmq.MessageSender;
 
 /**
- * 启动canal消息处理程序
- *
+ * 启动CanalService
  * @author bug1024
- * @date 2017-03-25
+ * @date 2017-11-03
  */
-public class StartCanalMsgHandler {
-
-    private static Logger logger = LoggerFactory.getLogger(StartCanalMsgHandler.class);
+public class CanalStarter {
+    private static Logger logger = LoggerFactory.getLogger(CanalStarter.class);
 
     public static void main(String[] args) {
         try {
@@ -26,5 +20,4 @@ public class StartCanalMsgHandler {
             logger.warn("canal service error", e);
         }
     }
-
 }

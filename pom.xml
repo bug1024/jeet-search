@@ -11,7 +11,7 @@
     <properties>
         <appname>jeet-search</appname>
         <spring.version>4.2.3.RELEASE</spring.version>
-        <jackson.version>2.9.10.1</jackson.version>
+        <jackson.version>2.11.0</jackson.version>
         <canal.version>1.0.22</canal.version>
         <junit.version>4.11</junit.version>
         <logback.version>1.1.7</logback.version>

@@ -1,9 +1,7 @@
-package canal;
+package com.bug1024.jeetsearch.canal;
 
-import consts.CommonConstant;
+import com.bug1024.jeetsearch.consts.CommonConstant;
 import lombok.Data;
-
-import java.util.Map;
 
 /**
  * canal消息

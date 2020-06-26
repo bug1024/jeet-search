@@ -1,4 +1,4 @@
-package elasticsearch;
+package com.bug1024.jeetsearch.elasticsearch;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -15,7 +15,7 @@ import java.sql.Timestamp;
  * @date 2017-04-02
  */
 @Data
-@Document(indexName="jeet-search", type="user", refreshInterval="-1")
+//@Document(indexName="jeet-search", type="user", refreshInterval="-1")
 public class User implements Serializable {
 
     private static final long serialVersionUID = -2312110729335920029L;

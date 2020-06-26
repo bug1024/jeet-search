@@ -1,4 +1,4 @@
-package canal;
+package com.bug1024.jeetsearch.canal;
 
 import lombok.Data;
 

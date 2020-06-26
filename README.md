@@ -14,7 +14,7 @@
  - mysql master收到dump请求，开始推送binary log给slave(也就是canal)
  - canal解析binary log对象(原始为byte流)
  - canal客户端将解析后数据发送到到RabbitMQ
- - 业务方消费MQ，调用ES API更新索引，实现索引的实时更新
+ - 业务方消费MQ，调用ES API更新索引，实现索引的增量更新
 
 ## MySQL配置
  修改my.cnf，开启binlog

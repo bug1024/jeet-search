@@ -1,14 +1,14 @@
-package canal;
+package com.bug1024.jeetsearch.canal;
 
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.protocol.CanalEntry;
 import com.alibaba.otter.canal.protocol.Message;
-import consts.CommonConstant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.bug1024.jeetsearch.consts.CommonConstant;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +19,8 @@ import java.util.List;
  * @date 2017-03-25
  */
 @Service
+@Slf4j
 public class CanalService {
-
-    private static Logger logger = LoggerFactory.getLogger(CanalService.class);
 
     @Autowired
     private CanalMsgHandler canalMsgHandler;
@@ -29,11 +28,15 @@ public class CanalService {
     @Autowired
     private CanalPool canalPool;
 
+    @PostConstruct
     public void start() {
+        log.info("CanalService start");
         int emptyCount = 0;
         CanalConnector canalConnector = canalPool.getConnector();
         try {
+            log.info("CanalService connect begin");
             canalConnector.connect();
+            log.info("CanalService connect success");
             canalConnector.subscribe(".*\\..*");
             canalConnector.rollback();
 
@@ -44,10 +47,10 @@ public class CanalService {
                 int size = message.getEntries().size();
                 if (batchId == -1 || size == 0) {
                     emptyCount++;
-                    System.out.println(emptyCount);
+                    log.info("emptyCount:{}", emptyCount);
                     try {
                         Thread.sleep(1000);
-                    } catch (InterruptedException e) {
+                    } catch (InterruptedException ignored) {
 
                     }
                 } else {
@@ -61,8 +64,9 @@ public class CanalService {
                 // connector.rollback(batchId);
             }
         } catch (Exception e) {
-            logger.warn("canal process error", e);
+            log.error("canal process error", e);
         } finally {
+            log.info("CanalService disconnect");
             canalConnector.disconnect();
         }
     }
@@ -75,7 +79,7 @@ public class CanalService {
     }
 
     private List<CanalMsg> convertToCanalMsgList(List<CanalEntry.Entry> entries) {
-        List<CanalMsg> msgList = new ArrayList<CanalMsg>();
+        List<CanalMsg> msgList = new ArrayList<>();
         CanalMsgContent canalMsgContent = null;
         for (CanalEntry.Entry entry : entries) {
             if (entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONBEGIN || entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONEND) {
@@ -109,7 +113,7 @@ public class CanalService {
     }
 
     private List<CanalChangeInfo> convertToCanalChangeInfoList(List<CanalEntry.Column> columnList) {
-        List<CanalChangeInfo> canalChangeInfoList = new ArrayList<CanalChangeInfo>();
+        List<CanalChangeInfo> canalChangeInfoList = new ArrayList<>();
         for (CanalEntry.Column column : columnList) {
             CanalChangeInfo canalChangeInfo = new CanalChangeInfo();
             canalChangeInfo.setName(column.getName());

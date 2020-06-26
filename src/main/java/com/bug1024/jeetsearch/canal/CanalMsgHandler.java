@@ -1,4 +1,4 @@
-package canal;
+package com.bug1024.jeetsearch.canal;
 
 /**
  * canal消息处理

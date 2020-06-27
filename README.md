@@ -5,8 +5,8 @@
  - 系统环境：MacOS 10.12
  - 数据库：MySQL 5.7.16
  - ES版本：stable 2.4.4
- - binlog订阅消费组件：canal 4.2.12
- - 消息队列：RabbitMQ 3.6.6
+ - binlog订阅消费组件：canal-1.0.23
+ - 消息队列：RabbitMQ 3.6.6（注：在canal比较新的版本里已自带投递到MQ的功能）
 
 ## 原理
  - 业务方更新MySQL表记录

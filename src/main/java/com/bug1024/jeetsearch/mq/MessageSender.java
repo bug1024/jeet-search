@@ -1,5 +1,7 @@
 package com.bug1024.jeetsearch.mq;
 
+import com.bug1024.jeetsearch.canal.CanalMsg;
+
 /**
  * 发送消息
  *
@@ -8,4 +10,9 @@ package com.bug1024.jeetsearch.mq;
  */
 public interface MessageSender {
 
+    /**
+     * send msg
+     * @param canalMsg
+     */
+    void send(CanalMsg canalMsg);
 }

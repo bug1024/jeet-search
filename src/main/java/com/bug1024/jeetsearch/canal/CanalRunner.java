@@ -1,16 +1,19 @@
 package com.bug1024.jeetsearch.canal;
 
 import com.alibaba.otter.canal.client.CanalConnector;
+import com.alibaba.otter.canal.common.utils.NamedThreadFactory;
 import com.alibaba.otter.canal.protocol.CanalEntry;
 import com.alibaba.otter.canal.protocol.Message;
 import com.bug1024.jeetsearch.consts.CommonConstant;
+import com.bug1024.jeetsearch.utils.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * canal客户端服务
@@ -18,21 +21,33 @@ import java.util.List;
  * @author bug1024
  * @date 2017-03-25
  */
-@Service
+@Component
 @Slf4j
-public class CanalService {
+public class CanalRunner implements CommandLineRunner {
 
-    @Autowired
+    @Resource
     private CanalMsgHandler canalMsgHandler;
 
-    @Autowired
-    private CanalPool canalPool;
+    @Resource
+    private CanalConnectorFactory canalConnectorFactory;
 
-    @PostConstruct
-    public void start() {
+    private static ExecutorService executorService = new ThreadPoolExecutor(
+            1,
+            1,
+            0L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<>(),
+            new NamedThreadFactory("canal-runner")
+    );
+
+    @Override
+    public void run(String... args) {
+        executorService.execute(this::start);
+    }
+
+    private void start() {
         log.info("CanalService start");
         int emptyCount = 0;
-        CanalConnector canalConnector = canalPool.getConnector();
+        CanalConnector canalConnector = canalConnectorFactory.getConnector();
         try {
             log.info("CanalService connect begin");
             canalConnector.connect();
@@ -48,11 +63,7 @@ public class CanalService {
                 if (batchId == -1 || size == 0) {
                     emptyCount++;
                     log.info("emptyCount:{}", emptyCount);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ignored) {
-
-                    }
+                    TimeUtil.sleep(1000);
                 } else {
                     emptyCount = 0;
                     processEntry(message.getEntries());

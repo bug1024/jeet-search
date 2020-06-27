@@ -38,24 +38,24 @@
     ## mysql serverId
     canal.instance.mysql.slaveId = 1234
 
-    # position info，需要改成自己的数据库信息
+    ## position info，需要改成自己的数据库信息
     canal.instance.master.address = 127.0.0.1:3306
     canal.instance.master.journal.name =
     canal.instance.master.position =
     canal.instance.master.timestamp =
 
-    #canal.instance.standby.address =
-    #canal.instance.standby.journal.name =
-    #canal.instance.standby.position =
-    #canal.instance.standby.timestamp =
+    ## canal.instance.standby.address =
+    ## canal.instance.standby.journal.name =
+    ## canal.instance.standby.position =
+    ## canal.instance.standby.timestamp =
 
-    # username/password，需要改成自己的数据库信息
+    ## username/password，需要改成自己的数据库信息
     canal.instance.dbUsername = canal
     canal.instance.dbPassword = canal
     canal.instance.defaultDatabaseName =
     canal.instance.connectionCharset = UTF-8
 
-    # table regex
+    ## table regex
     canal.instance.filter.regex = .*\\..*
 ```
 

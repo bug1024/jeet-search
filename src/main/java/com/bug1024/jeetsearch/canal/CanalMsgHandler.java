@@ -8,6 +8,10 @@ package com.bug1024.jeetsearch.canal;
  */
 public interface CanalMsgHandler {
 
-    Boolean handle(CanalMsg canalMsg);
+    /**
+     * 处理canal消息
+     * @param canalMsg
+     */
+    void handle(CanalMsg canalMsg);
 
 }

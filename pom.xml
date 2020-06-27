@@ -34,12 +34,10 @@
             <scope>test</scope>
         </dependency>
 
-        <!--Spring ElasticSearch-->
+        <!--ElasticSearch-->
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-elasticsearch</artifactId>
-            <version>2.0.4.RELEASE</version>
-            <scope>provided</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
         </dependency>
 
         <!--canal client-->
@@ -47,6 +45,23 @@
             <groupId>com.alibaba.otter</groupId>
             <artifactId>canal.client</artifactId>
             <version>${canal.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>zkclient</artifactId>
+                    <groupId>com.github.sgroschupf</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--kafka-->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
         </dependency>
 
         <!--lombok-->

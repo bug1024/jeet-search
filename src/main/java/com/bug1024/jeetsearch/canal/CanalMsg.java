@@ -1,7 +1,8 @@
 package com.bug1024.jeetsearch.canal;
 
-import com.bug1024.jeetsearch.consts.CommonConstant;
 import lombok.Data;
+
+import java.util.Date;
 
 /**
  * canal消息
@@ -12,16 +13,13 @@ import lombok.Data;
 @Data
 public class CanalMsg {
 
-    private String key;
+    private Date receiveTime;
 
     private CanalMsgContent canalMsgContent;
 
     CanalMsg(CanalMsgContent canalMsgContent) {
-        this.key = CommonConstant.CANAL_MSG_KEY_PREFIX + CommonConstant.KEY_SEPARATOR + canalMsgContent.getDbName() + CommonConstant.KEY_SEPARATOR + canalMsgContent.getTableName();
+        this.receiveTime = new Date();
         this.canalMsgContent = canalMsgContent;
-    }
-
-    CanalMsg() {
     }
 
 }

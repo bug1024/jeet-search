@@ -3,7 +3,7 @@ package com.bug1024.jeetsearch.canal;
 import lombok.Data;
 
 /**
- *
+ * canal change info
  * @author bug1024
  * @date 2017-09-08
  */

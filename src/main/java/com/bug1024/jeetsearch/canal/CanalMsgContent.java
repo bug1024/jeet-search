@@ -13,10 +13,16 @@ import java.util.List;
 public class CanalMsgContent {
 
     private String binLogFile;
+
     private Long binlogOffset;
+
     private String dbName;
+
     private String tableName;
+
     private String eventType;
+
     private List<CanalChangeInfo> dataBefore;
+
     private List<CanalChangeInfo> dataAfter;
 }
